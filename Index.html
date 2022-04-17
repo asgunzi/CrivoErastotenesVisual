@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+
+ <title>Visualização do Crivo de Erastótenes</title>
+ 
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+</head>
+<style>
+</style>	
+
+
+<body>
+
+      <h1><a href="https://ideiasesquecidas.com"> <img src=	"https://ideiasesquecidas.files.wordpress.com/2020/03/forgottenlogo.png" width="90" height = "50"></a>O Crivo de Erastótenes</h1>
+
+
+<form > 
+Lado: <input type="text" id="Numero" size="10" value="10">  
+</form>  
+<p>
+<button onclick="Desenhar()">Rodar</button>
+</p>
+
+
+</Body>   
+</Html>  
+
+<script type = "text/javascript">
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", 1520)
+        .attr("height", 800);
+   
+	Desenhar();
+
+
+    function sieve(n)
+    {
+    var arrSieve = [];
+	nmax = Math.floor(Math.sqrt(n));
+	
+	//Preenche tudo com 1
+	  for (i=1; i <= n;i++)
+	{
+	arrSieve.push(1);
+	}
+    
+    for (i=2; i <= nmax+1;i++)
+	{
+        if (arrSieve[i] ==1)
+		{
+            imax = Math.ceil(n/i);
+            for (k=2; k< imax; k++)
+			{
+                arrSieve[k*i] = 0;
+			}
+		}
+    }
+
+		
+	return(arrSieve);
+    }
+
+	function Desenhar()
+	{
+	svg.selectAll("*").remove();
+
+	//---------------------------------------------------------------
+	var i;
+	var j;
+	
+	var num =parseInt(d3.select("#Numero").property("value"));
+	var lado =20;
+	var x =[];
+	var y =[];
+	var color =[];
+	var arrSieve;
+	var c;
+
+	arrSieve = sieve(num*num);
+
+	//window.alert(arrSieve);
+
+
+	//Coordenadas dos quadrados
+	c=0;
+	for (i=0; i<num;i++)
+		{
+		for (j=0; j<num; j++)
+			{
+				x.push(50 +j*lado);
+				y.push(50 +i*lado);		
+				
+				c=c+1;
+				
+				if (c ==1)
+				{
+					color.push('gray');
+				}
+				else
+				{
+					if (arrSieve[c] ==1)
+					{
+						color.push('goldenrod');
+					}
+					else
+					{
+						color.push('gray');
+					}
+				}
+			}
+		}
+		
+	
+		  
+	svg.selectAll("rect")
+			.data(x)
+			.enter()
+			.append("rect")
+		  .attr("x", function(d,i){return x[i]})
+		  .attr("y", function(d,i){return y[i]})
+		  .attr("width", lado)
+		  .attr("height", lado)
+		  .attr("stroke", "black")
+		  .attr("stroke-width", 1)
+		  .attr("fill", function(d,i){return color[i]})
+	}
+
+
+	
+  </script>
+</body>
+</html>
